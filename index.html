@@ -189,6 +189,9 @@ function checkShift() {
 const year = selectedDate.getFullYear();
 const month = selectedDate.getMonth();
 
+// Get localized month name, e.g. "August"
+const monthName = selectedDate.toLocaleDateString('en-US', { month: 'long' });
+
 const firstDayOfMonth = new Date(year, month, 1);
 const lastDayOfMonth = new Date(year, month + 1, 0);
 
@@ -198,7 +201,7 @@ startDate.setDate(firstDayOfMonth.getDate() - firstDayOfMonth.getDay()); // Sund
 const endDate = new Date(lastDayOfMonth);
 endDate.setDate(lastDayOfMonth.getDate() + (6 - lastDayOfMonth.getDay())); // Saturday after or on last
 
-let calendarHTML = `<h3 style="text-align:center; color:#B5DDF2;">Monthly Calendar Overview</h3>`;
+let calendarHTML = `<h3 style="text-align:center; color:#B5DDF2;">${monthName} ${year} Calendar Overview</h3>`;
 calendarHTML += `<table style="width: 100%; border-collapse: collapse; text-align: center;">`;
 calendarHTML += `<tr>`;
 ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(dayName => {
