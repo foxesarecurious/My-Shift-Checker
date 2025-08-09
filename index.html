@@ -88,6 +88,14 @@
     border-radius: 8px;
     overflow: hidden;
   }
+
+/* Smaller font and no weird breaks in calendar table */
+table.calendar td, table.calendar th {
+  font-size: 0.85em;
+  white-space: nowrap;
+  padding: 8px;
+}
+
   th, td {
     padding: 8px;
     text-align: center;
@@ -138,7 +146,7 @@
 </div>
 
 <script>
-const anchorDate = new Date("2025-08-12");
+const anchorDate = new Date("2025-08-11");
 const lyricsOptions = [
   { text: "When they knock you down\nYou're gonna get back on your feet", artist: 'The Killers "Battle Born"' },
   { text: "'Cause baby, I could build a castle\nOut of all the bricks they threw at me\nAnd every day is like a battle", artist: 'Taylor Swift "New Romantics"' },
