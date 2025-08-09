@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Shift Checker</title>
+<style>
+  body {
+    background-color: white;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding-top: 20px;
+  }
+  .container {
+    background-color: #243745;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    color: #B5DDF2;
+    width: 90%;
+    max-width: 500px;
+    padding: 25px;
+    box-sizing: border-box;
+  }
+  h1 {
+    color: white;
+    font-weight: bold;
+    font-size: 2em;
+    margin: 0 0 15px 0;
+    text-align: center;
+  }
+  p {
+    text-align: center;
+    margin: 0 0 20px 0;
+  }
+  input[type="date"], button {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 1em;
+    border-radius: 8px;
+    border: 2px solid #577B8F;
+    text-align: center;
+    background-color: white;
+    color: #243745;
+    margin: 0 0 15px 0;
+  }
+  button {
+    background-color: #243745;
+    color: #B5DDF2;
+    font-weight: bold;
+    font-size: 1.1em;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+  button:hover {
+    background-color: #2f4b5f;
+  }
+  .fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .status {
+    font-weight: bold;
+    font-size: 1.1em;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .workday {
+    color: #B5DDF2;
+  }
+  .offday {
+    color: green;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background-color: white;
+    border: 2px solid #577B8F;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  th, td {
+    padding: 8px;
+    text-align: center;
+    border-bottom: 1px solid #577B8F;
+    color: #243745;
+  }
+  th {
+    background-color: #577B8F;
+    color: white;
+  }
+  .work-row {
+    background-color: #E0F7FA;
+  }
+  .off-row {
+    background-color: #E6F5E6;
+  }
+  .lyrics-box {
+    background-color: #243745;
+    border: 2px solid #577B8F;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  .lyrics-text {
+    color: #FF3389;
+    font-size: 1em;
+    font-style: italic;
+    text-align: left;
+    white-space: pre-line;
+  }
+  .lyrics-artist {
+    color: #B5DDF2;
+    font-size: 0.9em;
+    text-align: right;
+    margin-top: 5px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>My Shift Checker</h1>
+  <p>Pick a date to see if it's a workday.</p>
+  <input type="date" id="date">
+  <button onclick="checkShift()">Check</button>
+
+  <div id="result" class="fade-in"></div>
+</div>
+
+<script>
+const anchorDate = new Date("2025-08-12");
+const lyricsOptions = [
+  { text: "When they knock you down\nYou're gonna to get back on your feet", artist: 'The Killers "Battle Born"' },
+  { text: "'Cause baby, I could build a castle\nOut of all the bricks they threw at me\nAnd every day is like a battle", artist: 'Taylor Swift "New Romantics"' },
+  { text: "And if your glass heart should crack\nAnd for a second you turn back\nOh no, be strong", artist: 'U2 "Walk On"' },
+  { text: "수고했어요 정말 고생했어요\n그댄 나의 자랑이죠", artist: 'Jonghyun "End of a day"' }
+];
+
+function checkShift() {
+  const input = document.getElementById("date").value;
+  if (!input) return;
+  const selectedDate = new Date(input + 'T00:00:00');
+
+  const diffTime = selectedDate - anchorDate;
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  const cycleDay = ((diffDays % 8) + 8) % 8;
+  const isWorkDay = cycleDay < 4;
+
+  let resultHTML = `<div class="status ${isWorkDay ? 'workday' : 'offday'}">`;
+  resultHTML += isWorkDay ? `Workday :(` : `DAY OFF ✅`;
+  resultHTML += `</div>`;
+
+  // Table
+  let tableHTML = `<table><tr><th>Date</th><th>Day</th><th>Status</th></tr>`;
+  for (let i = -cycleDay; i < 8 - cycleDay; i++) {
+    const d = new Date(selectedDate);
+    d.setDate(selectedDate.getDate() + i);
+    const dayCycle = ((diffDays + i) % 8 + 8) % 8;
+    const work = dayCycle < 4;
+    const dayName = d.toLocaleDateString('en-US', { weekday: 'short' });
+    tableHTML += `<tr class="${work ? 'work-row' : 'off-row'}"><td>${d.toLocaleDateString()}</td><td>${dayName}</td><td>${work ? 'Work' : 'Off'}</td></tr>`;
+  }
+  tableHTML += `</table>`;
+
+  resultHTML += tableHTML;
+
+  // Lyrics block for workdays
+  if (isWorkDay) {
+    const randomLyric = lyricsOptions[Math.floor(Math.random() * lyricsOptions.length)];
+    resultHTML += `<div class="lyrics-box">
+      <div class="lyrics-text">${randomLyric.text}</div>
+      <div class="lyrics-artist">${randomLyric.artist}</div>
+    </div>`;
+  }
+
+  const resultDiv = document.getElementById("result");
+  resultDiv.innerHTML = resultHTML;
+  resultDiv.classList.remove("fade-in");
+  void resultDiv.offsetWidth; // trigger reflow
+  resultDiv.classList.add("fade-in");
+}
+</script>
+
+</body>
+</html>
