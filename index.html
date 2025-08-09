@@ -38,7 +38,7 @@
     margin: 0 0 20px 0;
   }
   input[type="date"], button {
-    width: 100%;
+    width: 100%; max-width: 100%;
     box-sizing: border-box;
     padding: 10px;
     font-size: 1em;
@@ -202,7 +202,7 @@ const endDate = new Date(lastDayOfMonth);
 endDate.setDate(lastDayOfMonth.getDate() + (6 - lastDayOfMonth.getDay())); // Saturday after or on last
 
 let calendarHTML = `<h3 style="text-align:center; color:#B5DDF2;">${monthName} ${year} Calendar Overview</h3>`;
-calendarHTML += `<table style="width: 100%; border-collapse: collapse; text-align: center;">`;
+calendarHTML += `<table style="width: 100%; max-width: 100%; border-collapse: collapse; text-align: center; table-layout: fixed; word-wrap: break-word;">`;
 calendarHTML += `<tr>`;
 ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(dayName => {
   calendarHTML += `<th style="padding: 8px; background-color:#577B8F; color: white;">${dayName}</th>`;
