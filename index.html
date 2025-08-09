@@ -184,6 +184,56 @@ function checkShift() {
   }
 
   const resultDiv = document.getElementById("result");
+  // Monthly calendar grid overview for the month of selectedDate
+const year = selectedDate.getFullYear();
+const month = selectedDate.getMonth();
+
+const firstDayOfMonth = new Date(year, month, 1);
+const lastDayOfMonth = new Date(year, month + 1, 0);
+
+const startDate = new Date(firstDayOfMonth);
+startDate.setDate(firstDayOfMonth.getDate() - firstDayOfMonth.getDay()); // Sunday before or on 1st
+
+const endDate = new Date(lastDayOfMonth);
+endDate.setDate(lastDayOfMonth.getDate() + (6 - lastDayOfMonth.getDay())); // Saturday after or on last
+
+let calendarHTML = `<h3 style="text-align:center; color:#B5DDF2;">Monthly Calendar Overview</h3>`;
+calendarHTML += `<table style="width: 100%; border-collapse: collapse; text-align: center;">`;
+calendarHTML += `<tr>`;
+['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(dayName => {
+  calendarHTML += `<th style="padding: 8px; background-color:#577B8F; color: white;">${dayName}</th>`;
+});
+calendarHTML += `</tr>`;
+
+let current = new Date(startDate);
+while (current <= endDate) {
+  calendarHTML += `<tr>`;
+  for (let i = 0; i < 7; i++) {
+    const inCurrentMonth = current.getMonth() === month;
+    const diff = Math.floor((current - anchorDate) / (1000 * 60 * 60 * 24));
+    const dayCycle = ((diff % 8) + 8) % 8;
+    const work = dayCycle < 4;
+    
+    let cellStyle = inCurrentMonth ? (work ? 'background-color: #E0F7FA;' : 'background-color: #E6F5E6;') : 'background-color: #f0f0f0; color: #aaa;';
+    
+    calendarHTML += `<td style="padding:10px; border: 1px solid #577B8F; ${cellStyle}">`;
+    if (inCurrentMonth) {
+      calendarHTML += `<div><strong>${current.getDate()}</strong></div>`;
+      calendarHTML += `<div>${work ? 'Work' : 'Off'}</div>`;
+    } else {
+      calendarHTML += `&nbsp;`; // empty cell for days outside the month
+    }
+    calendarHTML += `</td>`;
+    
+    current.setDate(current.getDate() + 1);
+  }
+  calendarHTML += `</tr>`;
+}
+
+calendarHTML += `</table>`;
+
+resultHTML += calendarHTML;
+
   resultDiv.innerHTML = resultHTML;
   resultDiv.classList.remove("fade-in");
   void resultDiv.offsetWidth; // trigger reflow
