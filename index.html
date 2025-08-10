@@ -5,6 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>My Shift Checker</title>
 <style>
+  :root {
+    --bg-main: #243745;
+    --bg-secondary: #1c2d3a;
+    --border-accent: #577B8F;
+    --text-light: #B5DDF2;
+    --text-off: green;
+    --text-lyric: #FF3389;
+    --work-bg: #E0F7FA;
+    --off-bg: #E6F5E6;
+  }
+
   body {
     background-color: white;
     font-family: 'Segoe UI', Tahoma, sans-serif;
@@ -16,16 +27,18 @@
     min-height: 100vh;
     padding-top: 20px;
   }
+
   .container {
-    background: linear-gradient(135deg, #243745, #1c2d3a);
+    background: linear-gradient(135deg, var(--bg-main), var(--bg-secondary));
     border-radius: 12px;
     box-shadow: 0 0 20px rgba(0,0,0,0.2);
-    color: #B5DDF2;
+    color: var(--text-light);
     width: 90%;
     max-width: 500px;
     padding: 25px;
     box-sizing: border-box;
   }
+
   h1 {
     color: white;
     font-weight: bold;
@@ -33,103 +46,117 @@
     margin: 0 0 15px 0;
     text-align: center;
   }
+
   p {
     text-align: center;
     margin: 0 0 20px 0;
   }
-  input[type="date"], button {
-    width: 100%; max-width: 100%;
+
+  input[type="date"],
+  button {
+    display: block;
+    width: 100%;
+    max-width: 100%;
     box-sizing: border-box;
     padding: 10px;
     font-size: 1em;
     border-radius: 8px;
-    border: 2px solid #577B8F;
+    border: 2px solid var(--border-accent);
     text-align: center;
-    background-color: white;
-    color: #243745;
     margin: 0 0 15px 0;
   }
+
+  input[type="date"] {
+    background-color: white;
+    color: var(--bg-main);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+
   button {
-    background-color: #243745;
-    color: #B5DDF2;
+    background-color: var(--bg-main);
+    color: var(--text-light);
     font-weight: bold;
     font-size: 1.1em;
     cursor: pointer;
     margin-bottom: 20px;
   }
+
   button:hover {
     background-color: #2f4b5f;
   }
+
   .fade-in {
     animation: fadeIn 0.5s ease-in-out;
   }
+
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(5px); }
     to { opacity: 1; transform: translateY(0); }
   }
+
   .status {
     font-weight: bold;
     font-size: 1.1em;
     text-align: center;
     margin-bottom: 20px;
   }
-  .workday {
-    color: #B5DDF2;
-  }
-  .offday {
-    color: green;
-  }
+
+  .workday { color: var(--text-light); }
+  .offday { color: var(--text-off); }
+
   table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
     background-color: white;
-    border: 2px solid #577B8F;
+    border: 2px solid var(--border-accent);
     border-radius: 8px;
     overflow: hidden;
   }
 
-/* Smaller font and no weird breaks in calendar table */
-table.calendar td, table.calendar th {
-  font-size: 0.75em !important;
-  white-space: nowrap !important;
-  padding: 4px 6px !important;
-  min-width: 50px !important;
-  word-break: keep-all !important;
-}
+  table.calendar td, table.calendar th {
+    font-size: 0.75em !important;
+    white-space: nowrap !important;
+    padding: 4px 6px !important;
+    min-width: 50px !important;
+    word-break: keep-all !important;
+  }
 
   th, td {
     padding: 8px;
     text-align: center;
-    border-bottom: 1px solid #577B8F;
-    color: #243745;
+    border-bottom: 1px solid var(--border-accent);
+    color: var(--bg-main);
   }
+
   th {
-    background-color: #577B8F;
+    background-color: var(--border-accent);
     color: white;
   }
-  .work-row {
-    background-color: #E0F7FA;
-  }
-  .off-row {
-    background-color: #E6F5E6;
-  }
+
+  .work-row { background-color: var(--work-bg); }
+  .off-row { background-color: var(--off-bg); }
+
   .lyrics-box {
-    background-color: #243745;
-    border: 2px solid #577B8F;
+    background-color: var(--bg-main);
+    border: 2px solid var(--border-accent);
     border-radius: 8px;
     padding: 10px;
     margin-bottom: 10px;
   }
+
   .lyrics-text {
-    color: #FF3389;
+    color: var(--text-lyric);
     font-size: 1em;
     font-style: italic;
     text-align: left;
     white-space: pre-line;
   }
+
   .lyrics-artist {
-    color: #B5DDF2;
+    color: var(--text-light);
     font-size: 0.9em;
     text-align: right;
     margin-top: 5px;
@@ -161,8 +188,7 @@ function checkShift() {
   if (!input) return;
   const selectedDate = new Date(input + 'T00:00:00');
 
-  const diffTime = selectedDate - anchorDate;
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  const diffDays = Math.floor((selectedDate - anchorDate) / (1000 * 60 * 60 * 24));
   const cycleDay = ((diffDays % 8) + 8) % 8;
   const isWorkDay = cycleDay < 4;
 
@@ -170,21 +196,23 @@ function checkShift() {
   resultHTML += isWorkDay ? `Workday :(` : `DAY OFF ✅`;
   resultHTML += `</div>`;
 
-  // Table
+  // Shift table
   let tableHTML = `<table><tr><th>Date</th><th>Day</th><th>Status</th></tr>`;
   for (let i = -cycleDay; i < 8 - cycleDay; i++) {
     const d = new Date(selectedDate);
     d.setDate(selectedDate.getDate() + i);
     const dayCycle = ((diffDays + i) % 8 + 8) % 8;
     const work = dayCycle < 4;
-    const dayName = d.toLocaleDateString('en-US', { weekday: 'short' });
-    tableHTML += `<tr class="${work ? 'work-row' : 'off-row'}"><td>${d.toLocaleDateString()}</td><td>${dayName}</td><td>${work ? 'Work' : 'Off'}</td></tr>`;
+    tableHTML += `<tr class="${work ? 'work-row' : 'off-row'}">
+      <td>${d.toLocaleDateString()}</td>
+      <td>${d.toLocaleDateString('en-US', { weekday: 'short' })}</td>
+      <td>${work ? 'Work' : 'Off'}</td>
+    </tr>`;
   }
   tableHTML += `</table>`;
-
   resultHTML += tableHTML;
 
-  // Lyrics block for workdays
+  // Lyrics
   if (isWorkDay) {
     const randomLyric = lyricsOptions[Math.floor(Math.random() * lyricsOptions.length)];
     resultHTML += `<div class="lyrics-box">
@@ -193,67 +221,60 @@ function checkShift() {
     </div>`;
   }
 
-  const resultDiv = document.getElementById("result");
+  // Calendar
+  const year = selectedDate.getFullYear();
+  const month = selectedDate.getMonth();
+  const monthName = selectedDate.toLocaleDateString('en-US', { month: 'long' });
+  const firstDayOfMonth = new Date(year, month, 1);
+  const lastDayOfMonth = new Date(year, month + 1, 0);
 
-// Monthly calendar grid overview for the month of selectedDate
-const year = selectedDate.getFullYear();
-const month = selectedDate.getMonth();
+  const startDate = new Date(firstDayOfMonth);
+  startDate.setDate(firstDayOfMonth.getDate() - firstDayOfMonth.getDay());
+  const endDate = new Date(lastDayOfMonth);
+  endDate.setDate(lastDayOfMonth.getDate() + (6 - lastDayOfMonth.getDay()));
 
-// Get localized month name, e.g. "August"
-const monthName = selectedDate.toLocaleDateString('en-US', { month: 'long' });
-
-const firstDayOfMonth = new Date(year, month, 1);
-const lastDayOfMonth = new Date(year, month + 1, 0);
-
-const startDate = new Date(firstDayOfMonth);
-startDate.setDate(firstDayOfMonth.getDate() - firstDayOfMonth.getDay()); // Sunday before or on 1st
-
-const endDate = new Date(lastDayOfMonth);
-endDate.setDate(lastDayOfMonth.getDate() + (6 - lastDayOfMonth.getDay())); // Saturday after or on last
-
-let calendarHTML = `<h3 style="text-align:center; color:#B5DDF2;">${monthName} ${year} Calendar Overview</h3>`;
-calendarHTML += `<table class="calendar" style="width: 100%; max-width: 100%; border-collapse: collapse; text-align: center; table-layout: fixed;">`;
-calendarHTML += `<tr>`;
-['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(dayName => {
-  calendarHTML += `<th style="padding: 8px; background-color:#577B8F; color: white;">${dayName}</th>`;
-});
-calendarHTML += `</tr>`;
-
-let current = new Date(startDate);
-while (current <= endDate) {
-  calendarHTML += `<tr>`;
-  for (let i = 0; i < 7; i++) {
-    const inCurrentMonth = current.getMonth() === month;
-    const diff = Math.floor((current - anchorDate) / (1000 * 60 * 60 * 24));
-    const dayCycle = ((diff % 8) + 8) % 8;
-    const work = dayCycle < 4;
-    
-    let cellStyle = inCurrentMonth ? (work ? 'background-color: #E0F7FA;' : 'background-color: #E6F5E6;') : 'background-color: #f0f0f0; color: #aaa;';
-    
-    calendarHTML += `<td style="padding:10px; border: 1px solid #577B8F; ${cellStyle}">`;
-    if (inCurrentMonth) {
-      calendarHTML += `<div><strong>${current.getDate()}</strong></div>`;
-      calendarHTML += `<div>${work ? 'Work' : 'Off'}</div>`;
-    } else {
-      calendarHTML += `&nbsp;`; // empty cell for days outside the month
-    }
-    calendarHTML += `</td>`;
-    
-    current.setDate(current.getDate() + 1);
-  }
+  let calendarHTML = `<h3 style="text-align:center; color:${getComputedStyle(document.documentElement).getPropertyValue('--text-light')}">${monthName} ${year} Calendar Overview</h3>`;
+  calendarHTML += `<table class="calendar"><tr>`;
+  ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(day => {
+    calendarHTML += `<th>${day}</th>`;
+  });
   calendarHTML += `</tr>`;
-}
 
-calendarHTML += `</table>`;
+  let current = new Date(startDate);
+  while (current <= endDate) {
+    calendarHTML += `<tr>`;
+    for (let i = 0; i < 7; i++) {
+      const inMonth = current.getMonth() === month;
+      const diff = Math.floor((current - anchorDate) / (1000 * 60 * 60 * 24));
+      const dayCycle = ((diff % 8) + 8) % 8;
+      const work = dayCycle < 4;
 
-resultHTML += calendarHTML;
+      let cellStyle = inMonth
+        ? (work ? `background-color: var(--work-bg);` : `background-color: var(--off-bg);`)
+        : 'background-color: #f0f0f0; color: #aaa;';
 
+      calendarHTML += `<td style="border: 1px solid var(--border-accent); ${cellStyle}">`;
+      if (inMonth) {
+        calendarHTML += `<div><strong>${current.getDate()}</strong></div>`;
+        calendarHTML += `<div>${work ? 'Work' : 'Off'}</div>`;
+      } else {
+        calendarHTML += `&nbsp;`;
+      }
+      calendarHTML += `</td>`;
+      current.setDate(current.getDate() + 1);
+    }
+    calendarHTML += `</tr>`;
+  }
+  calendarHTML += `</table>`;
+  resultHTML += calendarHTML;
+
+  // Output
+  const resultDiv = document.getElementById("result");
   resultDiv.innerHTML = resultHTML;
   resultDiv.classList.remove("fade-in");
-  void resultDiv.offsetWidth; // trigger reflow
+  void resultDiv.offsetWidth; 
   resultDiv.classList.add("fade-in");
 }
 </script>
-
 </body>
 </html>
