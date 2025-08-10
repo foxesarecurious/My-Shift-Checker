@@ -5,167 +5,134 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>My Shift Checker</title>
 <style>
-  :root {
-    --bg-main: #243745;
-    --bg-main-dark: #1c2d3a;
-    --accent-light: #B5DDF2;
-    --border-accent: #577B8F;
-    --lyric-color: #FF3389;
-    --offday-green: green;
-    --work-bg: #E0F7FA;
-    --off-bg: #E6F5E6;
-  }
-
   body {
     background-color: white;
     font-family: 'Segoe UI', Tahoma, sans-serif;
     margin: 0;
-    padding: 20px 0;
+    padding: 0;
     display: flex;
     justify-content: center;
     align-items: flex-start;
     min-height: 100vh;
+    padding-top: 20px;
   }
-
   .container {
-    background: linear-gradient(135deg, var(--bg-main), var(--bg-main-dark));
+    background: linear-gradient(135deg, #243745, #1c2d3a);
     border-radius: 12px;
     box-shadow: 0 0 20px rgba(0,0,0,0.2);
-    color: var(--accent-light);
+    color: #B5DDF2;
     width: 90%;
     max-width: 500px;
     padding: 25px;
     box-sizing: border-box;
   }
-
   h1 {
     color: white;
     font-weight: bold;
     font-size: 2em;
-    margin: 0 0 20px 0;
+    margin: 0 0 15px 0;
     text-align: center;
   }
-
   p {
     text-align: center;
     margin: 0 0 20px 0;
   }
-
-  .input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-bottom: 20px;
-  }
-
-  input[type="date"],
-  button {
-    width: 100%;
+  input[type="date"], button {
+    width: 100%; max-width: 100%;
     box-sizing: border-box;
     padding: 10px;
     font-size: 1em;
     border-radius: 8px;
-    border: 2px solid var(--border-accent);
+    border: 2px solid #577B8F;
     text-align: center;
-  }
-
-  input[type="date"] {
     background-color: white;
-    color: var(--bg-main);
+    color: #243745;
+    margin: 0 0 15px 0;
   }
-
   button {
-    background-color: var(--bg-main);
-    color: var(--accent-light);
+    background-color: #243745;
+    color: #B5DDF2;
     font-weight: bold;
     font-size: 1.1em;
     cursor: pointer;
+    margin-bottom: 20px;
   }
-
   button:hover {
     background-color: #2f4b5f;
   }
-
   .fade-in {
     animation: fadeIn 0.5s ease-in-out;
   }
-
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(5px); }
     to { opacity: 1; transform: translateY(0); }
   }
-
   .status {
     font-weight: bold;
     font-size: 1.1em;
     text-align: center;
     margin-bottom: 20px;
   }
-
-  .workday { color: var(--accent-light); }
-  .offday { color: var(--offday-green); }
-
+  .workday {
+    color: #B5DDF2;
+  }
+  .offday {
+    color: green;
+  }
   table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
     background-color: white;
-    border: 2px solid var(--border-accent);
+    border: 2px solid #577B8F;
     border-radius: 8px;
     overflow: hidden;
   }
 
+/* Smaller font and no weird breaks in calendar table */
+table.calendar td, table.calendar th {
+  font-size: 0.75em !important;
+  white-space: nowrap !important;
+  padding: 4px 6px !important;
+  min-width: 50px !important;
+  word-break: keep-all !important;
+}
+
   th, td {
     padding: 8px;
     text-align: center;
-    border-bottom: 1px solid var(--border-accent);
-    color: var(--bg-main);
+    border-bottom: 1px solid #577B8F;
+    color: #243745;
   }
-
   th {
-    background-color: var(--border-accent);
+    background-color: #577B8F;
     color: white;
   }
-
-  .work-row { background-color: var(--work-bg); }
-  .off-row { background-color: var(--off-bg); }
-
-  /* Smaller font in monthly calendar */
-  table.calendar td, table.calendar th {
-    font-size: 0.75em;
-    white-space: nowrap;
-    padding: 4px 6px;
-    min-width: 50px;
+  .work-row {
+    background-color: #E0F7FA;
   }
-
+  .off-row {
+    background-color: #E6F5E6;
+  }
   .lyrics-box {
-    background-color: var(--bg-main);
-    border: 2px solid var(--border-accent);
+    background-color: #243745;
+    border: 2px solid #577B8F;
     border-radius: 8px;
     padding: 10px;
     margin-bottom: 10px;
   }
-
   .lyrics-text {
-    color: var(--lyric-color);
+    color: #FF3389;
     font-size: 1em;
     font-style: italic;
     text-align: left;
     white-space: pre-line;
   }
-
   .lyrics-artist {
-    color: var(--accent-light);
+    color: #B5DDF2;
     font-size: 0.9em;
     text-align: right;
     margin-top: 5px;
-  }
-
-  @media (max-width: 500px) {
-    table.calendar td, table.calendar th {
-      font-size: 0.65em;
-      min-width: 40px;
-    }
   }
 </style>
 </head>
@@ -174,10 +141,9 @@
 <div class="container">
   <h1>My Shift Checker</h1>
   <p>Pick a date to see if it's a workday.</p>
-  <div class="input-group">
-    <input type="date" id="date">
-    <button onclick="checkShift()">Check</button>
-  </div>
+  <input type="date" id="date">
+  <button onclick="checkShift()">Check</button>
+
   <div id="result" class="fade-in"></div>
 </div>
 
@@ -195,25 +161,30 @@ function checkShift() {
   if (!input) return;
   const selectedDate = new Date(input + 'T00:00:00');
 
-  const diffDays = Math.floor((selectedDate - anchorDate) / (1000 * 60 * 60 * 24));
+  const diffTime = selectedDate - anchorDate;
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
   const cycleDay = ((diffDays % 8) + 8) % 8;
   const isWorkDay = cycleDay < 4;
 
-  let resultHTML = `<div class="status ${isWorkDay ? 'workday' : 'offday'}">${isWorkDay ? 'Workday :(' : 'DAY OFF ✅'}</div>`;
+  let resultHTML = `<div class="status ${isWorkDay ? 'workday' : 'offday'}">`;
+  resultHTML += isWorkDay ? `Workday :(` : `DAY OFF ✅`;
+  resultHTML += `</div>`;
 
-  // 8-day cycle table
-  resultHTML += `<table><tr><th>Date</th><th>Day</th><th>Status</th></tr>`;
+  // Table
+  let tableHTML = `<table><tr><th>Date</th><th>Day</th><th>Status</th></tr>`;
   for (let i = -cycleDay; i < 8 - cycleDay; i++) {
     const d = new Date(selectedDate);
     d.setDate(selectedDate.getDate() + i);
     const dayCycle = ((diffDays + i) % 8 + 8) % 8;
     const work = dayCycle < 4;
     const dayName = d.toLocaleDateString('en-US', { weekday: 'short' });
-    resultHTML += `<tr class="${work ? 'work-row' : 'off-row'}"><td>${d.toLocaleDateString()}</td><td>${dayName}</td><td>${work ? 'Work' : 'Off'}</td></tr>`;
+    tableHTML += `<tr class="${work ? 'work-row' : 'off-row'}"><td>${d.toLocaleDateString()}</td><td>${dayName}</td><td>${work ? 'Work' : 'Off'}</td></tr>`;
   }
-  resultHTML += `</table>`;
+  tableHTML += `</table>`;
 
-  // Lyrics for workdays
+  resultHTML += tableHTML;
+
+  // Lyrics block for workdays
   if (isWorkDay) {
     const randomLyric = lyricsOptions[Math.floor(Math.random() * lyricsOptions.length)];
     resultHTML += `<div class="lyrics-box">
@@ -222,26 +193,67 @@ function checkShift() {
     </div>`;
   }
 
-  // Monthly calendar overview
-  resultHTML += buildMonthlyCalendar(selectedDate);
-
   const resultDiv = document.getElementById("result");
+
+// Monthly calendar grid overview for the month of selectedDate
+const year = selectedDate.getFullYear();
+const month = selectedDate.getMonth();
+
+// Get localized month name, e.g. "August"
+const monthName = selectedDate.toLocaleDateString('en-US', { month: 'long' });
+
+const firstDayOfMonth = new Date(year, month, 1);
+const lastDayOfMonth = new Date(year, month + 1, 0);
+
+const startDate = new Date(firstDayOfMonth);
+startDate.setDate(firstDayOfMonth.getDate() - firstDayOfMonth.getDay()); // Sunday before or on 1st
+
+const endDate = new Date(lastDayOfMonth);
+endDate.setDate(lastDayOfMonth.getDate() + (6 - lastDayOfMonth.getDay())); // Saturday after or on last
+
+let calendarHTML = `<h3 style="text-align:center; color:#B5DDF2;">${monthName} ${year} Calendar Overview</h3>`;
+calendarHTML += `<table class="calendar" style="width: 100%; max-width: 100%; border-collapse: collapse; text-align: center; table-layout: fixed;">`;
+calendarHTML += `<tr>`;
+['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(dayName => {
+  calendarHTML += `<th style="padding: 8px; background-color:#577B8F; color: white;">${dayName}</th>`;
+});
+calendarHTML += `</tr>`;
+
+let current = new Date(startDate);
+while (current <= endDate) {
+  calendarHTML += `<tr>`;
+  for (let i = 0; i < 7; i++) {
+    const inCurrentMonth = current.getMonth() === month;
+    const diff = Math.floor((current - anchorDate) / (1000 * 60 * 60 * 24));
+    const dayCycle = ((diff % 8) + 8) % 8;
+    const work = dayCycle < 4;
+    
+    let cellStyle = inCurrentMonth ? (work ? 'background-color: #E0F7FA;' : 'background-color: #E6F5E6;') : 'background-color: #f0f0f0; color: #aaa;';
+    
+    calendarHTML += `<td style="padding:10px; border: 1px solid #577B8F; ${cellStyle}">`;
+    if (inCurrentMonth) {
+      calendarHTML += `<div><strong>${current.getDate()}</strong></div>`;
+      calendarHTML += `<div>${work ? 'Work' : 'Off'}</div>`;
+    } else {
+      calendarHTML += `&nbsp;`; // empty cell for days outside the month
+    }
+    calendarHTML += `</td>`;
+    
+    current.setDate(current.getDate() + 1);
+  }
+  calendarHTML += `</tr>`;
+}
+
+calendarHTML += `</table>`;
+
+resultHTML += calendarHTML;
+
   resultDiv.innerHTML = resultHTML;
   resultDiv.classList.remove("fade-in");
   void resultDiv.offsetWidth; // trigger reflow
   resultDiv.classList.add("fade-in");
 }
+</script>
 
-function buildMonthlyCalendar(selectedDate) {
-  const year = selectedDate.getFullYear();
-  const month = selectedDate.getMonth();
-  const monthName = selectedDate.toLocaleDateString('en-US', { month: 'long' });
-
-  const firstDayOfMonth = new Date(year, month, 1);
-  const lastDayOfMonth = new Date(year, month + 1, 0);
-
-  const startDate = new Date(firstDayOfMonth);
-  startDate.setDate(firstDayOfMonth.getDate() - firstDayOfMonth.getDay());
-
-  const endDate = new Date(lastDayOfMonth);
-  endDate.setDate(lastDayOfMonth.getDate() + (6 - lastDayOfMonth.getDay()));
+</body>
+</html>
